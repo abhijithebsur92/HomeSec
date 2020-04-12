@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "739990755055",
+    "firebase_url": "https://homesec-22477.firebaseio.com",
+    "project_id": "homesec-22477",
+    "storage_bucket": "homesec-22477.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739990755055:android:80e389d8964123c529ed1a",
+        "android_client_info": {
+          "package_name": "com.comp6441.homesec"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739990755055-9cbnbr69sdunm1ekqn601i9h17mhb3p2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnp0NM3ZSBJQNvGUSY9lldtOGx-1PFO-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739990755055-9cbnbr69sdunm1ekqn601i9h17mhb3p2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
