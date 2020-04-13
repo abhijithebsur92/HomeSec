@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:elevation="5dp">
+
+        <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="center"
+                android:src="@drawable/ic_unlock" />
+
+        <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="HomeSec"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/blue_gradient_bg">
+
+        <Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:layout_constraintBottom_toTopOf="@id/ssid_layout"
+                app:layout_constraintStart_toStartOf="@id/container" />
+
+        <LinearLayout
+                android:id="@+id/ssid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/space">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="0.8"
+                    android:background="@android:color/white"
+                    android:elevation="5dp"
+                    android:gravity="start"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    app:hintTextAppearance="@style/EditTextHintStyle">
+
+                <EditText
+                        android:id="@+id/username_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Input Home SSID"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add" />
+
+            <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable Alarm"
+                android:textColor="@android:color/white"
+                android:textSize="26sp"
+                app:layout_constraintBottom_toTopOf="@+id/stop_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ssid_layout" />
+
+        <Button
+                android:id="@+id/stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/rounded_corner_rectangle_white"
+                android:elevation="15dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="STOP"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
