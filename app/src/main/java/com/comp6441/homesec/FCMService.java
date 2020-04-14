@@ -23,10 +23,6 @@ public class FCMService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull final RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        if (remoteMessage.getData().size() > 0) {
-            //Data
-        }
-
         sendNotification(remoteMessage.getNotification().getTitle(),
                 remoteMessage.getNotification().getBody());
     }
