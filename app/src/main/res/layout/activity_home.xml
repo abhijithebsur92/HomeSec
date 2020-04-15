@@ -112,23 +112,23 @@
                 app:layout_constraintTop_toBottomOf="@id/ssid_layout" />
 
         <Button
-                android:id="@+id/stop_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:background="@drawable/rounded_corner_rectangle_white"
-                android:elevation="15dp"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="STOP"
-                android:textAllCaps="true"
-                android:visibility="invisible"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/stop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/rounded_corner_rectangle_white"
+            android:elevation="15dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="STOP"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

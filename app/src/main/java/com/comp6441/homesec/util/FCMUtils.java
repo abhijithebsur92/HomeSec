@@ -2,6 +2,7 @@ package com.comp6441.homesec.util;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -19,6 +20,7 @@ public class FCMUtils {
 
     private static String token = "";
     public static void generateToken() {
+
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -34,6 +36,7 @@ public class FCMUtils {
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         //Log.d(TAG, msg);
+
                     }
                 });
     }
