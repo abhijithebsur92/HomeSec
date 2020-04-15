@@ -6,53 +6,69 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.comp6441.homesec.util.NetworkUtils;
+import com.comp6441.homesec.util.NotificationUtils;
 import com.example.homesec.R;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.WallpaperInfo;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 public class HomeActivity extends AppCompatActivity {
 
     private DatabaseReference mStatus;
+    private Button mStopButton;
+    private SharedPreferenceManager mManager;
+    private EditText mEditText;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mManager = SharedPreferenceManager.getInstance(this);
+
+        initViews();
+        initListeners();
+        initDatabase();
+    }
+
+    private void initViews() {
+        mEditText = findViewById(R.id.ssid_editText);
+    }
+
+    private void initDatabase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mStatus = database.getReference("status");
-
-        final Button stopButton = findViewById(R.id.stop_button);
 
         mStatus.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 Integer value = dataSnapshot.getValue(int.class);
                 if (value != null) {
-                    stopButton.setVisibility(value == 0 ? View.INVISIBLE : View.VISIBLE);
-                    if (value == 1) {
-                        sendNotification("");
+                    if (value == 1 && isAlarmEnabled() && !isHomeNetwork()) {
+                        mStopButton.setVisibility(View.VISIBLE);
+                        NotificationUtils.sendNotification(HomeActivity.this);
+                    } else {
+                        mStopButton.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -62,8 +78,94 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        stopButton.setOnClickListener(new OnClickListener() {
+    private boolean isAlarmEnabled() {
+        if (mManager == null) {
+            mManager = SharedPreferenceManager.getInstance(this);
+        }
+        return mManager.isAlarmEnabled();
+    }
+
+    private boolean isHomeNetwork() {
+        if (mManager == null) {
+            mManager = SharedPreferenceManager.getInstance(this);
+        }
+        String ssid = NetworkUtils.getCurrentSsid(HomeActivity.this);
+        Set<String> ssids = mManager.getSSIDs();
+
+        return ssids != null && ssids.contains(ssid);
+    }
+
+    private void initListeners() {
+        initStopButtonListener();
+        initSSIDTextListener();
+        initCheckBoxListener();
+        initAddButtonListener();
+    }
+
+    private void initCheckBoxListener() {
+        final CheckBox checkBox = findViewById(R.id.enable_alarm_checkbox);
+        if (mManager == null) {
+            mManager = SharedPreferenceManager.getInstance(this);
+        }
+        checkBox.setChecked(mManager.isAlarmEnabled());
+
+        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                mManager.setEnableAlarm(isChecked);
+            }
+        });
+    }
+
+    private void initSSIDTextListener() {
+        TextView ssidTextView = findViewById(R.id.get_ssid_textview);
+        ssidTextView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                String ssid = NetworkUtils.getCurrentSsid(HomeActivity.this);
+                mEditText.setText(ssid);
+            }
+        });
+    }
+
+    private void initAddButtonListener() {
+        ImageView addButton = findViewById(R.id.add_button);
+        addButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mManager == null) {
+                            mManager = SharedPreferenceManager.getInstance(HomeActivity.this);
+                        }
+                        Set<String> ssids = mManager.getSSIDs();
+                        if (ssids == null) {
+                            ssids = new HashSet<>();
+                        }
+                        if (mEditText.getText() != null && !TextUtils.isEmpty(mEditText.getText().toString().trim())) {
+                            ssids.add(mEditText.getText().toString().trim());
+                        }
+                        mManager.setSSIDs(ssids);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(HomeActivity.this, "SSID Added", Toast.LENGTH_LONG).show();
+                                mEditText.setText("");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    private void initStopButtonListener() {
+        mStopButton = findViewById(R.id.stop_button);
+        mStopButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
                 if (mStatus == null) {
@@ -72,44 +174,15 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 mStatus.setValue(0);
-                Toast.makeText(stopButton.getContext(), "Done", Toast.LENGTH_LONG).show();
+                //Stop the alarm
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (notificationManager != null) {
+                    notificationManager.cancel(0);
+                }
+
+                mStopButton.setVisibility(View.INVISIBLE);
+                Toast.makeText(mStopButton.getContext(), "Done", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void sendNotification(String title) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        String channelId = "";
-        Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this + "/" + R.raw.police);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_stat_ic_notification)
-                        .setSound(defaultSoundUri)
-                        .setContentTitle("FCM test message")
-                        .setContentText(" Alert!!!")
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-//         Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this + "/" + R.raw.police);
-            AudioAttributes attributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .build();
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel.setSound(sound,attributes);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

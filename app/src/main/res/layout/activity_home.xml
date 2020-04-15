@@ -48,13 +48,13 @@
                 android:id="@+id/space"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                app:layout_constraintBottom_toTopOf="@id/ssid_layout"
-                app:layout_constraintStart_toStartOf="@id/container" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
                 android:id="@+id/ssid_layout"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
                 android:orientation="horizontal"
@@ -68,12 +68,12 @@
                     android:background="@android:color/white"
                     android:elevation="5dp"
                     android:gravity="start"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     app:hintTextAppearance="@style/EditTextHintStyle">
 
                 <EditText
-                        android:id="@+id/username_editText"
+                        android:id="@+id/ssid_editText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Input Home SSID"
@@ -85,10 +85,11 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Space
-                    android:layout_width="20dp"
+                    android:layout_width="10dp"
                     android:layout_height="match_parent" />
 
             <ImageView
+                    android:id="@+id/add_button"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
@@ -100,7 +101,20 @@
                     android:layout_height="match_parent" />
         </LinearLayout>
 
+        <TextView
+                android:id="@+id/get_ssid_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Get SSID?"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ssid_layout" />
+
         <CheckBox
+                android:id="@+id/enable_alarm_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enable Alarm"
@@ -109,26 +123,26 @@
                 app:layout_constraintBottom_toTopOf="@+id/stop_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ssid_layout" />
+                app:layout_constraintTop_toBottomOf="@id/get_ssid_textview" />
 
         <Button
-            android:id="@+id/stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/rounded_corner_rectangle_white"
-            android:elevation="15dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="STOP"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                android:id="@+id/stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/rounded_corner_rectangle_white"
+                android:elevation="15dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="STOP"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
