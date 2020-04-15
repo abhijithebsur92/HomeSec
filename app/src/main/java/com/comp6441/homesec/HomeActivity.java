@@ -10,8 +10,11 @@ import com.comp6441.homesec.util.NetworkUtils;
 import com.comp6441.homesec.util.NotificationUtils;
 import com.example.homesec.R;
 
+import android.Manifest;
 import android.app.NotificationManager;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -31,6 +34,8 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -124,8 +129,19 @@ public class HomeActivity extends AppCompatActivity {
         ssidTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                String ssid = NetworkUtils.getCurrentSsid(HomeActivity.this);
-                mEditText.setText(ssid);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                    if (ContextCompat.checkSelfPermission(HomeActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        String ssid = NetworkUtils.getCurrentSsid(HomeActivity.this);
+                        mEditText.setText(ssid);
+                    } else {
+                        requestLocationPermission();
+                    }
+                } else {
+                    String ssid = NetworkUtils.getCurrentSsid(HomeActivity.this);
+                    mEditText.setText(ssid);
+                }
             }
         });
     }
@@ -184,5 +200,38 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(mStopButton.getContext(), "Done", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(HomeActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(HomeActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                ActivityCompat.requestPermissions(HomeActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(HomeActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        //Once granted, update edit text
+                        mEditText.setText(NetworkUtils.getCurrentSsid(HomeActivity.this));
+                    }
+                } else {
+                        //Permission denied
+                }
+                return;
+            }
+        }
     }
 }
