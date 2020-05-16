@@ -30,7 +30,7 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_ic_notification)
                         .setSound(defaultSoundUri)
-                        .setContentTitle("FCM test message")
+                        .setContentTitle("Mayday Mayday")
                         .setContentText(" Alert!!!")
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);

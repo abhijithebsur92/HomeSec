@@ -48,7 +48,6 @@ public class NetworkUtils {
                     || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
                     || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH);
         }
-
         return false;
     }
 
@@ -68,11 +67,11 @@ public class NetworkUtils {
                 if (wifiManager != null) {
                     final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
                     if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
-                        return connectionInfo.getSSID();
+                        return "HomeNetwork";
                     }
                 }
             }
-            return "default";
+            return "Not Available";
         } else {
             String ssid = null;
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
